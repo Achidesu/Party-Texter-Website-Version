@@ -1,0 +1,107 @@
+body{
+    font-family: 'Lexend';
+    margin: 0px;
+    background-color: #232527;
+    color: white;
+}
+nav{
+    display: flex;
+    background-color: #191a1f;
+}
+
+nav h1{
+    margin-left: 20px;
+}
+
+.container- p{
+    text-align: left;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container--{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+.container-{
+    position: center;
+    display: absolute;
+    margin-top: 40px;
+    background-color: #272930;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px 0px black;
+    width: fit-content;
+}
+
+.text-box{
+    font-family: Lexend;
+    width: 60vh;
+}
+
+.text-box-div{
+    position: relative;
+    width: fit-content;
+}
+
+.label{
+    font-size: 20px;
+}
+
+#Requirements{
+    width: 60vh;
+    height: 10vh;
+    font-family: Lexend;
+    text-align: left;
+    resize: none;
+}
+
+.submit-button{
+    width: 100px;
+    height: 40px;
+    font-family: Lexend;
+    background-color: #335fff;
+    border-radius: 10px;
+    border-color: #335fff;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+    cursor: pointer;
+    
+}
+
+.submit-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px;
+}
+
+#Player-Container{
+    display: flex;
+    margin-left: 100px;
+}
+
+#output-container{
+    margin-top: 0px;
+}
+
+#output-container-{
+    margin-top: 0px;
+    min-width: 100vh;
+}
+
+#output-container--{
+    display: flex;
+    margin: auto;
+}
+
+#output-label{
+    text-align: center;
+}
