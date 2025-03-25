@@ -4,6 +4,7 @@ body{
     background-color: #232527;
     color: white;
 }
+
 nav{
     display: flex;
     background-color: #191a1f;
@@ -29,6 +30,7 @@ nav h1{
     align-items: center;
     margin: 20px;
 }
+
 .container-{
     position: center;
     display: absolute;
@@ -62,7 +64,7 @@ nav h1{
     resize: none;
 }
 
-.submit-button{
+.button{
     width: 100px;
     height: 40px;
     font-family: Lexend;
@@ -73,14 +75,19 @@ nav h1{
     border-width: 1px;
     color: white;
     cursor: pointer;
-    
+    margin: 5px;
 }
 
 .submit-button-container{
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     margin: 50px;
+}
+
+#Clear{
+    background-color: #ff3333;
+    border-color: #ff3333;
 }
 
 #Player-Container{
