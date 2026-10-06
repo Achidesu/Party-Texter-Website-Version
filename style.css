@@ -15,6 +15,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 24px 16px;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ---------- Navigation ---------- */
@@ -23,6 +24,7 @@ body {
   max-width: 960px;
   display: flex;
   align-items: center;
+  gap: 12px;
   background-color: #ffffff;
   border: 1px solid #dfe3ea;
   border-radius: 12px;
@@ -36,6 +38,31 @@ body {
   font-size: 1.25rem;
   letter-spacing: 0.02em;
   color: #161a20;
+}
+
+.nav-theme-toggle {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #c8ced9;
+  background-color: #f7f9fc;
+  color: #1c2128;
+  font-family: 'Lexend', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  animation: buttonFadeIn 0.35s ease both;
+}
+
+.nav-theme-toggle:hover {
+  border-color: #3a66e0;
+  background-color: #eef2fa;
+  box-shadow: 0 2px 6px rgba(28, 33, 40, 0.12);
+}
+
+.nav-theme-toggle:active {
+  transform: translateY(0);
 }
 
 /* ---------- Cards ---------- */
@@ -165,15 +192,12 @@ body {
   color: #ffffff;
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-}
-
-.button {
   animation: buttonFadeIn 0.35s ease both;
 }
 
 .button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(28, 33, 40, 0.18);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.22);
 }
 
 .button:nth-child(1) { animation-delay: 0s; }
@@ -185,30 +209,149 @@ body {
 }
 
 .button.primary {
-  background-color: #3a66e0;
-  border-color: #3a66e0;
+  background-color: #4f7dff;
+  border-color: #4f7dff;
 }
 
 .button.primary:hover {
-  background-color: #2f54c4;
+  background-color: #3d67e0;
 }
 
 .button.secondary {
-  background-color: #1a4ed8;
-  border-color: #1a4ed8;
+  background-color: #335fff;
+  border-color: #335fff;
 }
 
 .button.secondary:hover {
-  background-color: #123db6;
+  background-color: #2649d9;
 }
 
 .button.danger {
-  background-color: #d0312d;
-  border-color: #d0312d;
+  background-color: #ff3b3b;
+  border-color: #ff3b3b;
 }
 
 .button.danger:hover {
-  background-color: #b52824;
+  background-color: #e02e2e;
+}
+
+.dark-theme .button {
+  color: #f4f6f9;
+}
+
+.dark-theme .button.primary {
+  background-color: #4f7dff;
+  border-color: #4f7dff;
+}
+
+.dark-theme .button.primary:hover {
+  background-color: #3d67e0;
+}
+
+.dark-theme .button.secondary {
+  background-color: #335fff;
+  border-color: #335fff;
+}
+
+.dark-theme .button.secondary:hover {
+  background-color: #2649d9;
+}
+
+.dark-theme .button.danger {
+  background-color: #ff3b3b;
+  border-color: #ff3b3b;
+}
+
+.dark-theme .button.danger:hover {
+  background-color: #e02e2e;
+}
+
+/* ---------- Dark theme ---------- */
+body.dark-theme {
+  background-color: #0f1115;
+  color: #f2f4f8;
+}
+
+body.dark-theme .nav {
+  background-color: #1a1d24;
+  border-color: #2c313a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-theme .nav-title {
+  color: #ffffff;
+}
+
+body.dark-theme .card {
+  background-color: #23262d;
+  border-color: #363b45;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .field-label {
+  color: #9aa3b2;
+}
+
+body.dark-theme .text-box {
+  background-color: #1a1d24;
+  border-color: #363b45;
+  color: #f2f4f8;
+}
+
+body.dark-theme .text-box:focus {
+  border-color: #4f7dff;
+  box-shadow: 0 0 0 3px rgba(79, 125, 255, 0.35);
+  background-color: #20242c;
+}
+
+body.dark-theme .section-heading {
+  color: #9aa3b2;
+}
+
+body.dark-theme .nav-theme-toggle {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border-color: #363b45;
+  background-color: #1a1d24;
+  color: #f2f4f8;
+}
+
+body.dark-theme .nav-theme-toggle:hover {
+  border-color: #4f7dff;
+  background-color: #20242c;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+body.dark-theme .player-check {
+  background-color: #1a1d24;
+  border-color: #363b45;
+}
+
+body.dark-theme .player-check:hover {
+  border-color: #4f7dff;
+  background-color: #20242c;
+}
+
+body.dark-theme .check-box {
+  accent-color: #4f7dff;
+}
+
+body.dark-theme .player-label {
+  color: #e6e9f0;
+}
+
+body.dark-theme .output-heading {
+  color: #9aa3b2;
+}
+
+body.dark-theme .output-block {
+  background-color: #1a1d24;
+  border-color: #363b45;
+}
+
+body.dark-theme #output-1 {
+  color: #f2f4f8;
 }
 
 /* ---------- Output ---------- */

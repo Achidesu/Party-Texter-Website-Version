@@ -12,6 +12,7 @@
 <body>
   <nav class="nav">
     <h1 class="nav-title">Party Texter</h1>
+    <button class="nav-theme-toggle" id="Theme-Toggle" type="button" aria-label="Toggle dark theme">Dark Theme</button>
   </nav>
 
   <main class="card main-card">
@@ -53,6 +54,8 @@
     </section>
   </main>
 
+
+
   <div class="button-row">
     <button class="button primary" type="button" id="Submit">Submit</button>
     <button class="button secondary" type="button" id="Copy">Copy</button>
@@ -69,5 +72,45 @@
   </section>
 
   <script src="index.js"></script>
+<script>
+  (function () {
+    const themeToggle = document.getElementById('Theme-Toggle');
+    const body = document.body;
+
+    function updateTheme(theme) {
+      if (theme === 'dark') {
+        body.classList.add('dark-theme');
+        themeToggle.textContent = 'Light Theme';
+      } else {
+        body.classList.remove('dark-theme');
+        themeToggle.textContent = 'Dark Theme';
+      }
+      try {
+        localStorage.setItem('party-texter-theme', theme);
+      } catch (error) {
+        // ignore storage errors
+      }
+    }
+
+    const saved = (function () {
+      try {
+        return localStorage.getItem('party-texter-theme');
+      } catch (error) {
+        return null;
+      }
+    })();
+
+    if (saved === 'dark') {
+      updateTheme('dark');
+    }
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function () {
+        const isDark = body.classList.contains('dark-theme');
+        updateTheme(isDark ? 'light' : 'dark');
+      });
+    }
+  })();
+</script>
 </body>
 </html>
