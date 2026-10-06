@@ -2,94 +2,87 @@ const Submit = document.getElementById('Submit');
 const Clear = document.getElementById('Clear');
 const Copy = document.getElementById('Copy');
 
-let Player_1, Player_2, Player_3, Player_4;
-let Player_status = [9];
-let Player = {};
+const StrategyNameInput = document.getElementById('Strategy-Name');
+const StrategyLinkInput = document.getElementById('Strategy-Link');
+const RequirementsInput = document.getElementById('Requirements');
+const OutputElement = document.getElementById('output-1');
 
-Submit.onclick = function print() {
-        gen_text();
-    }
+Submit.addEventListener('click', generateOutput);
+Clear.addEventListener('click', clearForm);
+Copy.addEventListener('click', copyOutput);
 
-Clear.onclick = function clear() {
-    document.getElementById('Strategy-Name').value = "";
-    document.getElementById('Strategy-Link').value = "";
-    document.getElementById('Requirements').value = "";
-    document.getElementById('output-1').innerHTML = "";
-    for (let i = 1; i <= 4; i++) {
-        let playercheckbox_id = document.getElementById('Player-'+i);
-        playercheckbox_id.checked = false;
-    }
-    console.log("[Debug] : Cleared!");
+function generateOutput() {
+  const strategyName = StrategyNameInput.value.trim();
+  const strategyLink = StrategyLinkInput.value.trim();
+
+  if (!strategyName) {
+    window.alert('Please fill the Strategy Name');
+    return;
+  }
+
+  if (!strategyLink) {
+    window.alert('Please fill the Strategy Link');
+    return;
+  }
+
+  const hostingRequirements = RequirementsInput.value.trim();
+  const strategyNameLine = `Hosting ${strategyName}`;
+  const strategyLinkLine = `Strategy Link : **${strategyLink}**`;
+  const requirementsLine = hostingRequirements ? `Requirements : ${hostingRequirements}` : '';
+
+  const playerStatus = checkPlayerStatus();
+  const playerLines = buildPlayerLines(playerStatus);
+
+  const discordMarkdown =
+    [strategyNameLine, strategyLinkLine, ...playerLines, requirementsLine]
+      .filter(Boolean)
+      .join('\n');
+
+  OutputElement.textContent = discordMarkdown;
 }
 
-Copy.onclick = function copy() {
-    let text = document.getElementById('output-1').innerText;
-    navigator.clipboard.writeText(text).then(function() {
-        console.log('Async: Copying to clipboard was successful!');
-    }, function(err) {
-        console.error('Async: Could not copy text: ', err);
-    });
-    window.alert("Text has been copied!");
-    console.log("[Debug] : Copied!");
+function checkPlayerStatus() {
+  const statuses = [];
+  for (let i = 1; i <= 4; i++) {
+    const checked = document.getElementById('Player-' + i).checked;
+    statuses.push(checked ? 1 : 0);
+  }
+  return statuses;
 }
 
-function gen_text() {
-    let Strategy_name = document.getElementById('Strategy-Name').value;
-    let Strategy_link = document.getElementById('Strategy-Link').value;
-    let Hosting_Requirements = document.getElementById('Requirements').value;
-    let Strategy_name_final = `Hosting ${Strategy_name}`;
-    let Strategy_link_final = `Strategy Link : **${Strategy_link}**`;
-    let Hosting_Requirements_final = `Requirements : ${Hosting_Requirements}`;
-    
-    if (Hosting_Requirements == "") {
-        Hosting_Requirements_final = ``;
+function buildPlayerLines(statuses) {
+  return statuses.map((status, index) => {
+    const playerNumber = index + 1;
+    if (status === 1) {
+      return `Player ${playerNumber} : Closed :red_circle:`;
     }
-
-    if (Strategy_name == "") {
-        window.alert("Please fill the Strategy Name");
-        console.log("[Debug] : Strategy Name is empty!");
-        console.log("[Debug] : Text generation failed!");
-        return false;
-    }
-
-    if (Strategy_link == "") {
-        window.alert("Please fill the Strategy link");
-        console.log("[Debug] : Strategy Link is empty!");
-        console.log("[Debug] : Text generation failed!");
-        return false;
-    }
-
-    check_player();
-
-    for (let i=0; i<=Player_status.length; i++) {
-        if (Player_status[i] == 1) {
-            Player["Player_" + (i)] = `Player ${i} : Closed :red_circle:`;
-        }
-        else if (Player_status[i] == 0) {
-            Player["Player_" + (i)] = `Player ${i} : Open :green_circle:`;
-        }
-    }
-
-    let final = Strategy_name_final + "\n" + Strategy_link_final + "\n" + Player.Player_1 + "\n" + Player.Player_2 + "\n" + Player.Player_3 + "\n" + Player.Player_4 + "\n" + Hosting_Requirements_final;
-    document.getElementById('output-1').innerHTML = final.replace(/\n/g, "<br>");
+    return `Player ${playerNumber} : Open :green_circle:`;
+  });
 }
 
-function check_player(){
-    Player_status = [9];
-    for (let i = 1; i <= 4; i++) {
-        let playercheckbox_id = document.getElementById('Player-'+i);
-        
-        if (playercheckbox_id.checked == true) {
-            console.log(`Player ${i} is ready!`);
-            Player_status.push(1);
-        }
-        else if (playercheckbox_id.checked == false) {
-            console.log(`Player ${i} is NOT ready!`);
-            Player_status.push(0);
-        }
-    }
+function clearForm() {
+  StrategyNameInput.value = '';
+  StrategyLinkInput.value = '';
+  RequirementsInput.value = '';
+  OutputElement.textContent = '';
 
-    console.log(Player_status);
-
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('Player-' + i).checked = false;
+  }
 }
 
+async function copyOutput() {
+  const text = OutputElement.textContent || '';
+  if (!text.trim()) {
+    window.alert('Nothing to copy');
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert('Text has been copied!');
+  } catch (error) {
+    console.error('Could not copy text:', error);
+    window.alert('Could not copy text.');
+  }
+}
