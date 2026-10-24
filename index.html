@@ -3,61 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Generate Discord-ready party hosting messages.">
   <title>Party Texter</title>
+  <script>
+    // Apply saved/system theme before first paint to avoid a flash.
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('party-texter-theme'); } catch (error) {}
+      if (theme !== 'dark' && theme !== 'light') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300..700&display=swap">
   <link rel="stylesheet" href="style.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
-  </style>
 </head>
 <body>
   <nav class="nav">
-    <h1 class="nav-title">Party Texter</h1>
-    <button class="nav-theme-toggle" id="Theme-Toggle" type="button" aria-label="Toggle dark theme">Dark Theme</button>
+    <div class="nav-left">
+      <h1 class="nav-title">Party Texter</h1>
+      <label class="nav-hardcore" title="Hardcore parties have 3 player slots">
+        <input type="checkbox" id="Hardcore-Mode" class="switch">
+        <span class="nav-hardcore-label">Hardcore</span>
+      </label>
+    </div>
+    <button class="nav-theme-toggle" id="Theme-Toggle" type="button" aria-label="Toggle dark theme"></button>
   </nav>
 
   <main class="card main-card">
     <section class="field-group">
-      <label class="field-label" for="Strategy-Name">Strategy Name</label>
-      <input id="Strategy-Name" class="text-box" type="text" placeholder="e.g. Alpha Hosting">
+      <label class="field-label" for="Strategy-Name">Strategy Name <span class="required" aria-hidden="true">*</span></label>
+      <input id="Strategy-Name" class="text-box" type="text" placeholder="e.g. Alpha Hosting" autocomplete="off" required aria-describedby="Strategy-Name-Error">
+      <p class="field-error" id="Strategy-Name-Error" role="alert"></p>
     </section>
 
     <section class="field-group">
-      <label class="field-label" for="Strategy-Link">Strategy Link</label>
-      <input id="Strategy-Link" class="text-box" type="text" placeholder="https://...">
+      <label class="field-label" for="Strategy-Link">Strategy Link <span class="required" aria-hidden="true">*</span></label>
+      <input id="Strategy-Link" class="text-box" type="text" inputmode="url" placeholder="https://..." autocomplete="off" required aria-describedby="Strategy-Link-Error">
+      <p class="field-error" id="Strategy-Link-Error" role="alert"></p>
     </section>
 
-    <section class="field-group">
+    <section class="field-group field-wide">
       <label class="field-label" for="Requirements">Requirements</label>
       <textarea id="Requirements" class="text-box textarea" placeholder="List the requirements here..."></textarea>
     </section>
 
     <section class="player-group">
-      <h2 class="section-heading">Players</h2>
-      <div class="player-grid" id="Player-Container">
-        <label class="player-check">
-          <input type="checkbox" id="Player-1" class="check-box">
-          <span class="player-label">Player 1</span>
-        </label>
-        <label class="player-check">
-          <input type="checkbox" id="Player-2" class="check-box">
-          <span class="player-label">Player 2</span>
-        </label>
-        <label class="player-check">
-          <input type="checkbox" id="Player-3" class="check-box">
-          <span class="player-label">Player 3</span>
-        </label>
-        <label class="player-check">
-          <input type="checkbox" id="Player-4" class="check-box">
-          <span class="player-label">Player 4</span>
-        </label>
+      <div class="player-header">
+        <h2 class="section-heading">Players</h2>
+        <span class="player-summary" id="Player-Summary"></span>
       </div>
+      <p class="hint">Tick a slot to mark it as taken.</p>
+      <div class="player-grid" id="Player-Container"></div>
     </section>
   </main>
 
-
-
   <div class="button-row">
-    <button class="button primary" type="button" id="Submit">Submit</button>
+    <button class="button primary" type="button" id="Submit">Submit <kbd>Ctrl + Enter</kbd></button>
     <button class="button secondary" type="button" id="Copy">Copy</button>
     <button class="button danger" type="button" id="Clear">Clear</button>
   </div>
@@ -65,52 +70,20 @@
   <section class="output-section card">
     <div class="output-header">
       <h2 class="output-heading">Output Text</h2>
+      <div class="output-tabs" role="tablist" aria-label="Output view">
+        <button type="button" class="tab is-active" role="tab" aria-selected="true" data-view="preview">Preview</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-view="raw">Raw</button>
+      </div>
     </div>
-    <div class="output-block" id="output-container--">
-      <p id="output-1"></p>
+    <div class="output-block" id="output-container--" aria-live="polite">
+      <div id="output-1" class="output-preview">
+        <p class="output-empty">Fill in the form and press Submit to generate your message.</p>
+      </div>
     </div>
   </section>
 
+  <div class="toast" id="Toast" role="status" aria-live="polite"></div>
+
   <script src="index.js"></script>
-<script>
-  (function () {
-    const themeToggle = document.getElementById('Theme-Toggle');
-    const body = document.body;
-
-    function updateTheme(theme) {
-      if (theme === 'dark') {
-        body.classList.add('dark-theme');
-        themeToggle.textContent = 'Light Theme';
-      } else {
-        body.classList.remove('dark-theme');
-        themeToggle.textContent = 'Dark Theme';
-      }
-      try {
-        localStorage.setItem('party-texter-theme', theme);
-      } catch (error) {
-        // ignore storage errors
-      }
-    }
-
-    const saved = (function () {
-      try {
-        return localStorage.getItem('party-texter-theme');
-      } catch (error) {
-        return null;
-      }
-    })();
-
-    if (saved === 'dark') {
-      updateTheme('dark');
-    }
-
-    if (themeToggle) {
-      themeToggle.addEventListener('click', function () {
-        const isDark = body.classList.contains('dark-theme');
-        updateTheme(isDark ? 'light' : 'dark');
-      });
-    }
-  })();
-</script>
 </body>
 </html>
